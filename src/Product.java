@@ -14,7 +14,7 @@ public class Product {
 
     @Override
     public String toString() {
-        return String.format("%-15s | %,10d원 | %-20s | %3d개",
-                name, price, description, stock);
+        return String.format("%-15s | %,10d원 | %-20s",
+                name, price, description);
     }
 }
