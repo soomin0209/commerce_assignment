@@ -3,6 +3,7 @@ import java.util.List;
 
 public class Category {
 
+    // 속성
     private String categoryName;
     private List<Product> products = new ArrayList<>();
 
@@ -12,6 +13,7 @@ public class Category {
         this.products = products;
     }
 
+    // Getter
     public String getCategoryName() {
         return categoryName;
     }

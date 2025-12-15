@@ -4,8 +4,9 @@ import java.util.Scanner;
 
 public class CommerceSystem {
 
+    // 속성
     private List<Category> categories = new ArrayList<>();
-    Scanner sc = new Scanner(System.in);
+    private Scanner sc = new Scanner(System.in);
 
     // 생성자
     public CommerceSystem(List<Category> categories) {
