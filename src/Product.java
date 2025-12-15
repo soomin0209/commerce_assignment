@@ -1,12 +1,12 @@
 public class Product {
 
-    private String name;
+    private String productName;
     private int price;
     private String description;
     private int stock;
 
-    public Product(String name, int price, String description, int stock) {
-        this.name = name;
+    public Product(String productName, int price, String description, int stock) {
+        this.productName = productName;
         this.price = price;
         this.description = description;
         this.stock = stock;
@@ -15,6 +15,6 @@ public class Product {
     @Override
     public String toString() {
         return String.format("%-15s | %,10d원 | %-20s",
-                name, price, description);
+                productName, price, description);
     }
 }
