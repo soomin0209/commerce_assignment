@@ -46,6 +46,10 @@ public class Customer {
         this.grade = grade;
     }
 
+    public void setCart(List<Cart> cart) {
+        this.cart = cart;
+    }
+
     public void addToCart(Product product) {
         // 장바구니에 있는 상품인지 확인
         for (Cart product1 : cart) {
