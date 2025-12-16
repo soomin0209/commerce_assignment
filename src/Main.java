@@ -22,7 +22,7 @@ public class Main {
         categories.add(new Category("의류", clothes));
         categories.add(new Category("식품", foods));
 
-        Customer customer = new Customer("Soomin", "soomin_0209@naver.com", "SILVER");
+        Customer customer = new Customer("Soomin", "soomin_0209@naver.com");
         CommerceSystem commerceSystem = new CommerceSystem(categories, customer);
         commerceSystem.start();
     }

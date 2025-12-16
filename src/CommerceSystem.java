@@ -139,7 +139,16 @@ public class CommerceSystem {
 
     // 장바구니 확인 메서드
     public void checkCart() {
-        System.out.println("장바구니 확인 !!!!");
+        System.out.println("\n[ 장바구니 내역 ]");
+        for (Cart cart : customer.getCart()) {
+            System.out.println(cart);
+        }
+        System.out.println("\n[ 총 주문 금액 ]");
+        int totalPrice = 0;
+        for (Cart cart : customer.getCart()) {
+            totalPrice += (cart.getProduct().getPrice() * cart.getQuantity());
+        }
+        System.out.printf("%,d원\n", totalPrice);
     }
 
     // 주문 취소 메서드

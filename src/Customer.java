@@ -7,13 +7,13 @@ public class Customer {
     private String customerName;
     private String email;
     private String grade;
-    private List<Product> cart = new ArrayList<>();
+    private List<Cart> cart = new ArrayList<>();
 
     // 생성자
-    public Customer(String customerName, String email, String grade) {
+    public Customer(String customerName, String email) {
         this.customerName = customerName;
         this.email = email;
-        this.grade = grade;
+        this.grade = "BRONZE";
     }
 
     // Getter
@@ -29,7 +29,7 @@ public class Customer {
         return grade;
     }
 
-    public List<Product> getCart() {
+    public List<Cart> getCart() {
         return cart;
     }
 
@@ -47,6 +47,14 @@ public class Customer {
     }
 
     public void addToCart(Product product) {
-        cart.add(product);
+        // 장바구니에 있는 상품인지 확인
+        for (Cart product1 : cart) {
+            if (product1.getProduct().equals(product)) {
+                product1.increaseQuantity();    // 수량 +1
+                return;
+            }
+        }
+        // 없으면 새로 추가
+        cart.add(new Cart(product, 1));
     }
 }
