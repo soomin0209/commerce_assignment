@@ -276,6 +276,13 @@ public class CommerceSystem {
 
                 System.out.print("상품명을 입력해주세요: ");
                 String addProductName = sc.nextLine();
+                for (Product product : selectCategory.getProducts()) {
+                    if (product.getProductName().equals(addProductName)) {
+                        System.out.println("\n이미 동일한 상품이 존재합니다.");
+                        return;
+                    }
+                }
+
                 int addProductPrice = 0;
                 while (true) {
                     System.out.print("가격을 입력해주세요: ");
