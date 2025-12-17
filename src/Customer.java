@@ -52,9 +52,9 @@ public class Customer {
 
     public void addToCart(Product product) {
         // 장바구니에 있는 상품인지 확인
-        for (Cart product1 : cart) {
-            if (product1.getProduct().equals(product)) {
-                product1.increaseQuantity();    // 수량 +1
+        for (Cart cartItem : cart) {
+            if (cartItem.getProduct().equals(product)) {
+                cartItem.increaseQuantity();    // 수량 +1
                 return;
             }
         }
