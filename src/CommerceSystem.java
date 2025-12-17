@@ -104,7 +104,7 @@ public class CommerceSystem {
                         } else if (managementNum == 1) {
                             addProduct();
                         } else if (managementNum == 2) {
-                            // TODO 상품 수정 메서드
+                            updateProduct();
                         } else if (managementNum == 3) {
                             // TODO 상품 삭제 메서드
                         } else if (managementNum == 4) {
@@ -276,13 +276,14 @@ public class CommerceSystem {
 
                 System.out.print("상품명을 입력해주세요: ");
                 String addProductName = sc.nextLine();
-                for (Product product : selectCategory.getProducts()) {
-                    if (product.getProductName().equals(addProductName)) {
-                        System.out.println("\n이미 동일한 상품이 존재합니다.");
-                        return;
+                for (Category category : categories) {
+                    for (Product product : category.getProducts()) {
+                        if (product.getProductName().equals(addProductName)) {
+                            System.out.println("\n이미 동일한 상품이 존재합니다.");
+                            return;
+                        }
                     }
                 }
-
                 int addProductPrice = 0;
                 while (true) {
                     System.out.print("가격을 입력해주세요: ");
@@ -338,5 +339,76 @@ public class CommerceSystem {
                 sc.nextLine();
             }
         }
+    }
+
+    // 상품 수정 메서드
+    public void updateProduct() {
+        System.out.print("\n수정할 상품명을 입력해주세요: ");
+        sc.nextLine(); // 버퍼 비우기
+        String updateProductName = sc.nextLine();
+        for (Category category : categories) {
+            for (Product product : category.getProducts()) {
+                if (product.getProductName().equals(updateProductName)) {
+                    System.out.println("현재 상품 정보: " + product);
+
+                    while (true) {
+                        System.out.println("\n수정할 항목을 선택해주세요: ");
+                        System.out.println("1. 가격");
+                        System.out.println("2. 설명");
+                        System.out.println("3. 재고수량");
+                        System.out.print("입력: ");
+                        try {
+                            int updateItemNum = sc.nextInt();
+                            if (updateItemNum == 1) {
+                                System.out.printf("\n현재 가격: %,d원\n", product.getPrice());
+                                while (true) {
+                                    System.out.print("새로운 가격을 입력해주세요: ");
+                                    try {
+                                        int newProductPrice = sc.nextInt();
+                                        System.out.printf("\n%s의 가격이 %,d원 → %,d원으로 수정되었습니다.\n",
+                                                product.getProductName(), product.getPrice(), newProductPrice);
+                                        product.setPrice(newProductPrice);
+                                        return;
+                                    }catch (Exception e) {
+                                        System.out.println("\n다시 입력해주세요.\n");
+                                        sc.nextLine();
+                                    }
+                                }
+                            } else if (updateItemNum == 2) {
+                                System.out.println("\n현재 설명 : " + product.getDescription());
+                                System.out.print("새로운 설명을 입력해주세요: ");
+                                sc.nextLine();  // 버퍼 지우기
+                                String newProductDescription = sc.nextLine();
+                                System.out.printf("\n%s의 설명이 '%s' → '%s'(으)로 수정되었습니다.\n",
+                                        product.getProductName(), product.getDescription(), newProductDescription);
+                                product.setDescription(newProductDescription);
+                                return;
+                            } else if (updateItemNum == 3) {
+                                System.out.println("\n현재 재고수량: " + product.getStock() + "개");
+                                while (true) {
+                                    System.out.print("새로운 재고수량을 입력해주세요: ");
+                                    try {
+                                        int newProductStock = sc.nextInt();
+                                        System.out.printf("\n%s의 재고수량이 %d개 → %d개로 수정되었습니다.\n",
+                                                product.getProductName(), product.getStock(), newProductStock);
+                                        product.setStock(newProductStock);
+                                        return;
+                                    }catch (Exception e) {
+                                        System.out.println("\n다시 입력해주세요.\n");
+                                        sc.nextLine();
+                                    }
+                                }
+                            } else {
+                                System.out.println("\n다시 입력해주세요.");
+                            }
+                        }catch (Exception e) {
+                            System.out.println("\n다시 입력해주세요.");
+                            sc.nextLine();
+                        }
+                    }
+                }
+            }
+        }
+        System.out.println("\n해당 상품이 존재하지 않습니다.");
     }
 }

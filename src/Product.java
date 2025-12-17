@@ -36,6 +36,10 @@ public class Product {
         this.price = price;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public void setStock(int stock) {
         this.stock = stock;
     }
