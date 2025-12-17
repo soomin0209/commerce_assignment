@@ -46,6 +46,11 @@ public class Product {
 
     @Override
     public String toString() {
+        return String.format("%-15s | %,10d원 | %-20s | %3d개",
+                productName, price, description, stock);
+    }
+
+    public String toStringWithoutStock() {
         return String.format("%-15s | %,10d원 | %-20s",
                 productName, price, description);
     }

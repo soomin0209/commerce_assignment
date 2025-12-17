@@ -8,6 +8,7 @@ public class CommerceSystem {
     private List<Category> categories = new ArrayList<>();
     private Scanner sc = new Scanner(System.in);
     private Customer customer;
+    private boolean returnToMain = false;
 
     // 생성자
     public CommerceSystem(List<Category> categories, Customer customer) {
@@ -108,7 +109,11 @@ public class CommerceSystem {
                         } else if (adminMenuChoice == 3) {
                             deleteProduct();
                         } else if (adminMenuChoice == 4) {
-                            // TODO 전체 상품 현황 메서드
+                            viewAllProductsStatus();
+                            if (returnToMain) {
+                                returnToMain = false;
+                                return;
+                            }
                         } else {
                             System.out.println("\n다시 입력해주세요.");
                         }
@@ -139,7 +144,7 @@ public class CommerceSystem {
             System.out.println("\n[ " + category.getCategoryName() + " 카테고리 ]");
             int productIndex = 1;
             for (Product product : products) {
-                System.out.println(productIndex + ". " + product);
+                System.out.println(productIndex + ". " + product.toStringWithoutStock());
                 productIndex++;
             }
             System.out.println("0. 뒤로가기");
@@ -424,6 +429,7 @@ public class CommerceSystem {
                             if (confirmDeleteProductChoice == 1) {
                                 System.out.println("\n" + product.getProductName() + "이(가) 성공적으로 삭제되었습니다!");
                                 category.getProducts().remove(product);
+                                customer.getCart().removeIf(cartItem -> cartItem.getProduct().equals(product)); // 장바구니에서도 삭제
                                 return;
                             } else if (confirmDeleteProductChoice == 2) {
                                 System.out.println("\n취소하였습니다.");
@@ -440,5 +446,36 @@ public class CommerceSystem {
             }
         }
         System.out.println("\n해당 상품이 존재하지 않습니다.");
+    }
+
+    public void viewAllProductsStatus() {
+        System.out.println("\n[ 전체 상품 현황 ]");
+        for (Category category : categories){
+            List<Product> products = category.getProducts();
+            System.out.println("=== " + category.getCategoryName() + " ===");
+            for (Product product : products) {
+                System.out.println(product);
+            }
+            System.out.println();
+        }
+        System.out.println("1. 관리자 메뉴로 돌아가기");
+        System.out.println("2. 메인으로 돌아가기");
+        while (true) {
+            System.out.print("입력: ");
+            try {
+                int backChoice = sc.nextInt();
+                if (backChoice == 1) {
+                    return;
+                } else if (backChoice == 2) {
+                    returnToMain = true;
+                    return;
+                } else {
+                    System.out.println("\n다시 입력해주세요.\n");
+                }
+            } catch (Exception e) {
+                System.out.println("\n다시 입력해주세요.\n");
+                sc.nextLine();
+            }
+        }
     }
 }
