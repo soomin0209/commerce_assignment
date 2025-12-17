@@ -82,41 +82,52 @@ public class CommerceSystem {
 
     // 관리자 모드 메서드
     public void managementMode() {
-        System.out.print("\n관리자 비밀번호를 입력해주세요: ");
-        String managerPw = sc.next();
-        if (managerPw.equals("admin123")) {
-            while (true) {
-                System.out.println("\n[ 관리자 모드 ]");
-                System.out.println("1. 상품 추가");
-                System.out.println("2. 상품 수정");
-                System.out.println("3. 상품 삭제");
-                System.out.println("4. 전체 상품 현황");
-                System.out.println("0. 메인으로 돌아가기");
-                System.out.print("입력: ");
+        int failCount = 0;
+        while (true) {
+            System.out.print("\n관리자 비밀번호를 입력해주세요: ");
+            String managerPw = sc.next();
+            if (managerPw.equals("admin123")) {
+                while (true) {
+                    System.out.println("\n[ 관리자 모드 ]");
+                    System.out.println("1. 상품 추가");
+                    System.out.println("2. 상품 수정");
+                    System.out.println("3. 상품 삭제");
+                    System.out.println("4. 전체 상품 현황");
+                    System.out.println("0. 메인으로 돌아가기");
+                    System.out.print("입력: ");
 
-                try {
-                    int managementNum = sc.nextInt();
+                    try {
+                        int managementNum = sc.nextInt();
 
-                    if (managementNum == 0) {
-                        break;
-                    } else if (managementNum == 1) {
-                        // TODO 상품 추가 메서드
-                    } else if (managementNum == 2) {
-                        // TODO 상품 수정 메서드
-                    } else if (managementNum == 3) {
-                        // TODO 상품 삭제 메서드
-                    } else if (managementNum == 4) {
-                        // TODO 전체 상품 현황 메서드
-                    } else {
+                        if (managementNum == 0) {
+                            return;
+                        } else if (managementNum == 1) {
+                            // TODO 상품 추가 메서드
+                        } else if (managementNum == 2) {
+                            // TODO 상품 수정 메서드
+                        } else if (managementNum == 3) {
+                            // TODO 상품 삭제 메서드
+                        } else if (managementNum == 4) {
+                            // TODO 전체 상품 현황 메서드
+                        } else {
+                            System.out.println("\n다시 입력해주세요.");
+                        }
+                    } catch (Exception e) {
                         System.out.println("\n다시 입력해주세요.");
+                        sc.nextLine();
                     }
-                } catch (Exception e) {
-                    System.out.println("\n다시 입력해주세요.");
-                    sc.nextLine();
+                }
+            } else {
+                failCount++;
+                if (failCount < 3) {
+                    System.out.println("\n비밀번호가 일치하지 않습니다.");
+                    System.out.println("3회 이상 실패 시 메인으로 돌아갑니다. (" + failCount + "/3)");
+                } else {
+                    System.out.println("\n비밀번호를 3회 이상 잘못 입력하였습니다.");
+                    System.out.println("메인으로 돌아갑니다.");
+                    return;
                 }
             }
-        } else {
-            System.out.println("\n비밀번호가 틀렸습니다.");
         }
     }
 
