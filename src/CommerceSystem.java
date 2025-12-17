@@ -55,7 +55,6 @@ public class CommerceSystem {
                 }
                 Category selectedCategory = categories.get(categoryChoice - 1);
                 productList(selectedCategory);
-
             } catch (Exception e) {
                 System.out.println("\n다시 입력해주세요.");
                 sc.nextLine();
@@ -73,7 +72,6 @@ public class CommerceSystem {
         }
         System.out.println((categoryIndex + 2) + ". 관리자 모드");
         System.out.println("0. 종료");
-
         if(!customer.getCart().isEmpty()) {
             System.out.println("\n[ 주문 관리 ]");
             System.out.println((categoryIndex) + ". 장바구니 확인");
@@ -85,6 +83,7 @@ public class CommerceSystem {
     // 관리자 모드 메서드
     public void administratorMode() {
         int loginFailCount = 0;
+
         while (true) {
             System.out.print("\n관리자 비밀번호를 입력해주세요: ");
             String adminPw = sc.next();
@@ -97,7 +96,6 @@ public class CommerceSystem {
                     System.out.println("4. 전체 상품 현황");
                     System.out.println("0. 메인으로 돌아가기");
                     System.out.print("입력: ");
-
                     try {
                         int adminMenuChoice = sc.nextInt();
 
@@ -108,7 +106,7 @@ public class CommerceSystem {
                         } else if (adminMenuChoice == 2) {
                             updateProduct();
                         } else if (adminMenuChoice == 3) {
-                            // TODO 상품 삭제 메서드
+                            deleteProduct();
                         } else if (adminMenuChoice == 4) {
                             // TODO 전체 상품 현황 메서드
                         } else {
@@ -146,7 +144,6 @@ public class CommerceSystem {
             }
             System.out.println("0. 뒤로가기");
             System.out.print("입력: ");
-
             try {
                 int productChoice = sc.nextInt();
 
@@ -175,7 +172,6 @@ public class CommerceSystem {
         while (true){
             try {
                 int addToCartChoice = sc.nextInt();
-
                 if (addToCartChoice == 1) {
                     if (product.getStock() == 0) {
                         System.out.println("\n" + product.getProductName() + "의 재고가 부족합니다.");
@@ -245,7 +241,6 @@ public class CommerceSystem {
             totalPrice += (cartItem.getProduct().getPrice() * cartItem.getQuantity());
         }
         System.out.printf("\n주문이 완료되었습니다! 총 금액: %,d원\n", totalPrice);
-
         for (Cart cartItem : customer.getCart()) {
             Product product = cartItem.getProduct();
             int quantity = cartItem.getQuantity();
@@ -275,7 +270,6 @@ public class CommerceSystem {
                 }
                 Category selectedCategory = categories.get(adminCategoryChoice - 1);
                 System.out.println("\n[ " + selectedCategory.getCategoryName() + " 카테고리에 상품 추가 ]");
-
                 System.out.print("상품명을 입력해주세요: ");
                 String newProductName = sc.nextLine();
                 for (Category category : categories) {
@@ -318,7 +312,6 @@ public class CommerceSystem {
                     System.out.print("입력: ");
                     try {
                         int confirmAddProductChoice = sc.nextInt();
-
                         if (confirmAddProductChoice == 1) {
                             Product newProduct = new Product(newProductName, newProductPrice, newProductDescription, newProductStock);
                             selectedCategory.getProducts().add(newProduct);
@@ -352,7 +345,6 @@ public class CommerceSystem {
             for (Product product : category.getProducts()) {
                 if (product.getProductName().equals(updateProductName)) {
                     System.out.println("현재 상품 정보: " + product);
-
                     while (true) {
                         System.out.println("\n수정할 항목을 선택해주세요: ");
                         System.out.println("1. 가격");
@@ -405,6 +397,42 @@ public class CommerceSystem {
                             }
                         }catch (Exception e) {
                             System.out.println("\n다시 입력해주세요.");
+                            sc.nextLine();
+                        }
+                    }
+                }
+            }
+        }
+        System.out.println("\n해당 상품이 존재하지 않습니다.");
+    }
+
+    public void deleteProduct() {
+        System.out.print("\n삭제할 상품명을 입력해주세요: ");
+        sc.nextLine(); // 버퍼 지우기
+        String deleteProductName = sc.nextLine();
+        for (Category category : categories) {
+            for (Product product : category.getProducts()) {
+                if (product.getProductName().equals(deleteProductName)) {
+                    System.out.println("\n현재 상품 정보: " + product);
+                    System.out.println("\n위 상품을 정말 삭제하시겠습니까?");
+                    System.out.println("1. 확인   2. 취소");
+                    while (true) {
+                        System.out.print("입력: ");
+                        try {
+                            int confirmDeleteProductChoice = sc.nextInt();
+
+                            if (confirmDeleteProductChoice == 1) {
+                                System.out.println("\n" + product.getProductName() + "이(가) 성공적으로 삭제되었습니다!");
+                                category.getProducts().remove(product);
+                                return;
+                            } else if (confirmDeleteProductChoice == 2) {
+                                System.out.println("\n취소하였습니다.");
+                                return;
+                            } else {
+                                System.out.println("\n다시 입력해주세요.\n");
+                            }
+                        } catch (Exception e) {
+                            System.out.println("\n다시 입력해주세요.\n");
                             sc.nextLine();
                         }
                     }
