@@ -30,7 +30,7 @@ public class CommerceSystem {
                     return;
                 } else if (categoryNum == (orderManagementNum)){
                     if (customer.getCart().isEmpty()) {
-                        System.out.println("다시 입력해주세요");
+                        System.out.println("\n다시 입력해주세요");
                         continue;
                     } else {
                         checkCart();
@@ -38,21 +38,24 @@ public class CommerceSystem {
                     }
                 } else if (categoryNum == (orderManagementNum + 1)) {
                     if (customer.getCart().isEmpty()) {
-                        System.out.println("다시 입력해주세요");
+                        System.out.println("\n다시 입력해주세요");
                         continue;
                     } else {
                         cancelOrder();
                         continue;
                     }
-                }else if (categoryNum < 1 || categoryNum > categories.size()) {
-                    System.out.println("다시 입력해주세요.");
+                } else if (categoryNum == (orderManagementNum + 2)) {
+                    managementMode();
+                    continue;
+                } else if (categoryNum < 1 || categoryNum > categories.size()) {
+                    System.out.println("\n다시 입력해주세요.");
                     continue;
                 }
                 Category selectCategory = categories.get(categoryNum - 1);
                 productList(selectCategory);
 
             } catch (Exception e) {
-                System.out.println("다시 입력해주세요.");
+                System.out.println("\n다시 입력해주세요.");
                 sc.nextLine();
             }
         }
@@ -66,6 +69,7 @@ public class CommerceSystem {
             System.out.println(categoryIndex + ". " + category.getCategoryName());
             categoryIndex++;
         }
+        System.out.println((categoryIndex + 2) + ". 관리자 모드");
         System.out.println("0. 종료");
 
         if(!customer.getCart().isEmpty()) {
@@ -74,6 +78,46 @@ public class CommerceSystem {
             System.out.println((categoryIndex + 1) + ". 주문 취소");
         }
         System.out.print("입력: ");
+    }
+
+    // 관리자 모드 메서드
+    public void managementMode() {
+        System.out.print("\n관리자 비밀번호를 입력해주세요: ");
+        String managerPw = sc.next();
+        if (managerPw.equals("admin123")) {
+            while (true) {
+                System.out.println("\n[ 관리자 모드 ]");
+                System.out.println("1. 상품 추가");
+                System.out.println("2. 상품 수정");
+                System.out.println("3. 상품 삭제");
+                System.out.println("4. 전체 상품 현황");
+                System.out.println("0. 메인으로 돌아가기");
+                System.out.print("입력: ");
+
+                try {
+                    int managementNum = sc.nextInt();
+
+                    if (managementNum == 0) {
+                        break;
+                    } else if (managementNum == 1) {
+                        // TODO 상품 추가 메서드
+                    } else if (managementNum == 2) {
+                        // TODO 상품 수정 메서드
+                    } else if (managementNum == 3) {
+                        // TODO 상품 삭제 메서드
+                    } else if (managementNum == 4) {
+                        // TODO 전체 상품 현황 메서드
+                    } else {
+                        System.out.println("\n다시 입력해주세요.");
+                    }
+                } catch (Exception e) {
+                    System.out.println("\n다시 입력해주세요.");
+                    sc.nextLine();
+                }
+            }
+        } else {
+            System.out.println("\n비밀번호가 틀렸습니다.");
+        }
     }
 
     // 카테고리 별 상품 목록 메서드
@@ -96,14 +140,13 @@ public class CommerceSystem {
                 if (productNum == 0) {
                     break;
                 } else if (productNum < 1 || productNum > products.size()) {
-                    System.out.println("다시 입력해주세요.");
+                    System.out.println("\n다시 입력해주세요.");
                     continue;
                 }
                 addProductToCart(products.get(productNum - 1));
                 break;
-
             } catch (Exception e) {
-                System.out.println("다시 입력해주세요.");
+                System.out.println("\n다시 입력해주세요.");
                 sc.nextLine();
             }
         }
@@ -132,11 +175,11 @@ public class CommerceSystem {
                     System.out.println("\n취소하였습니다.");
                     break;
                 } else {
-                    System.out.println("다시 입력해주세요.");
+                    System.out.println("\n다시 입력해주세요.");
                     sc.nextLine();
                 }
             } catch (Exception e) {
-                System.out.println("다시 입력해주세요.");
+                System.out.println("\n다시 입력해주세요.");
                 sc.nextLine();
             }
         }
@@ -167,11 +210,11 @@ public class CommerceSystem {
                 } else if (orderNum == 2) {
                     break;
                 } else {
-                    System.out.println("다시 입력해주세요.");
+                    System.out.println("\n다시 입력해주세요.");
                     sc.nextLine();
                 }
             } catch (Exception e) {
-                System.out.println("다시 입력해주세요.");
+                System.out.println("\n다시 입력해주세요.");
                 sc.nextLine();
             }
         }
@@ -181,7 +224,6 @@ public class CommerceSystem {
     public void cancelOrder() {
         customer.setCart(new ArrayList<>());
         System.out.println("\n주문이 취소되었습니다.");
-
     }
 
     // 주문 확정 메서드
