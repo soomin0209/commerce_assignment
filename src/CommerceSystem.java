@@ -102,7 +102,7 @@ public class CommerceSystem {
                         if (managementNum == 0) {
                             return;
                         } else if (managementNum == 1) {
-                            // TODO 상품 추가 메서드
+                            addProduct();
                         } else if (managementNum == 2) {
                             // TODO 상품 수정 메서드
                         } else if (managementNum == 3) {
@@ -187,7 +187,6 @@ public class CommerceSystem {
                     break;
                 } else {
                     System.out.println("\n다시 입력해주세요.");
-                    sc.nextLine();
                 }
             } catch (Exception e) {
                 System.out.println("\n다시 입력해주세요.");
@@ -222,7 +221,6 @@ public class CommerceSystem {
                     break;
                 } else {
                     System.out.println("\n다시 입력해주세요.");
-                    sc.nextLine();
                 }
             } catch (Exception e) {
                 System.out.println("\n다시 입력해주세요.");
@@ -254,5 +252,84 @@ public class CommerceSystem {
             product.setStock(product.getStock() - quantity);
         }
         customer.setCart(new ArrayList<>());
+    }
+
+    // 상품 추가 메서드
+    public void addProduct() {
+        while (true) {
+            System.out.println("\n어느 카테고리에 상품을 추가하시겠습니까?");
+            int categoryIndex = 1;
+            for (Category category : categories) {
+                System.out.println(categoryIndex + ". " + category.getCategoryName());
+                categoryIndex++;
+            }
+            System.out.print("입력: ");
+            try {
+                int adminCategoryNum = sc.nextInt();
+                sc.nextLine(); // 버퍼 비우기
+                if (adminCategoryNum < 1 || adminCategoryNum > categories.size()) {
+                    System.out.println("\n다시 입력해주세요.");
+                    continue;
+                }
+                Category selectCategory = categories.get(adminCategoryNum - 1);
+                System.out.println("\n[ " + selectCategory.getCategoryName() + " 카테고리에 상품 추가 ]");
+
+                System.out.print("상품명을 입력해주세요: ");
+                String addProductName = sc.nextLine();
+                int addProductPrice = 0;
+                while (true) {
+                    System.out.print("가격을 입력해주세요: ");
+                    try {
+                        addProductPrice = sc.nextInt();
+                        sc.nextLine(); // 버퍼 비우기
+                        break;
+                    } catch (Exception e1) {
+                        System.out.println("\n다시 입력해주세요.\n");
+                        sc.nextLine();
+                    }
+                }
+                System.out.print("상품 설명을 입력해주세요: ");
+                String addProductDescription = sc.nextLine();
+                int addProductStock = 0;
+                while (true) {
+                    System.out.print("재고수량을 입력해주세요: ");
+                    try {
+                        addProductStock = sc.nextInt();
+                        break;
+                    } catch (Exception e2) {
+                        System.out.println("\n다시 입력해주세요.\n");
+                        sc.nextLine();
+                    }
+                }
+                System.out.printf("\n%-15s | %,10d원 | %-20s | %3d개", addProductName, addProductPrice, addProductDescription, addProductStock);
+                System.out.println("\n위 정보로 상품을 추가하시겠습니까?");
+                System.out.println("1. 확인   2. 취소");
+                while (true) {
+                    System.out.print("입력: ");
+                    try {
+                        int addNum = sc.nextInt();
+
+                        if (addNum == 1) {
+                            Product newProduct = new Product(addProductName, addProductPrice, addProductDescription, addProductStock);
+                            selectCategory.getProducts().add(newProduct);
+                            System.out.println("\n상품이 성공적으로 추가되었습니다!");
+                            break;
+                        } else if (addNum == 2) {
+                            System.out.println("\n취소하였습니다.");
+                            break;
+                        } else {
+                            System.out.println("\n다시 입력해주세요.");
+                        }
+                    } catch (Exception e) {
+                        System.out.println("\n다시 입력해주세요.");
+                        sc.nextLine();
+                    }
+                }
+                return;
+            } catch (Exception e) {
+                System.out.println("\n다시 입력해주세요.");
+                sc.nextLine();
+            }
+        }
     }
 }
