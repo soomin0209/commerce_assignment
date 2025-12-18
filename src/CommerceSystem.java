@@ -171,10 +171,10 @@ public class CommerceSystem {
     public void addProductToCart(Product product) {
         System.out.println("\n[ 선택한 상품 ]");
         System.out.println(product);
-        System.out.println("\n위 상품을 장바구니에 추가하시겠습니까?");
-        System.out.println("1. 확인       2. 취소");
-        System.out.print("입력: ");
         while (true){
+            System.out.println("\n위 상품을 장바구니에 추가하시겠습니까?");
+            System.out.println("1. 확인       2. 취소");
+            System.out.print("입력: ");
             try {
                 int addToCartChoice = sc.nextInt();
                 if (addToCartChoice == 1) {
@@ -209,11 +209,11 @@ public class CommerceSystem {
         for (Cart cartItem : customer.getCart()) {
             totalPrice += (cartItem.getProduct().getPrice() * cartItem.getQuantity());
         }
-        System.out.printf("%,d원\n\n", totalPrice);
-        System.out.println("위 상품들을 주문하시겠습니까?");
-        System.out.println("1. 주문 확정    2. 메인으로 돌아가기");
-        System.out.print("입력: ");
+        System.out.printf("%,d원\n", totalPrice);
         while (true) {
+            System.out.println("\n위 상품들을 주문하시겠습니까?");
+            System.out.println("1. 주문 확정    2. 메인으로 돌아가기");
+            System.out.print("입력: ");
             try {
                 int confirmOrderChoice = sc.nextInt();
 
@@ -240,20 +240,46 @@ public class CommerceSystem {
 
     // 주문 확정 메서드
     public void confirmOrder() {
-        // 총 금액 계산 + 재고 수정
-        int totalPrice = 0;
-        for (Cart cartItem : customer.getCart()) {
-            totalPrice += (cartItem.getProduct().getPrice() * cartItem.getQuantity());
+        while (true) {
+            System.out.println("\n고객 등급을 입력해주세요.");
+            Grade[] grades = Grade.values();
+            int gradeIndex = 1;
+            for (Grade grade : grades) {
+                System.out.printf("%d. %-8s : %2d%% 할인\n", gradeIndex, grade.name(), grade.getDiscountPercent());
+                gradeIndex++;
+            }
+            System.out.print("입력: ");
+            try {
+                int gradeChoice = sc.nextInt();
+                if (gradeChoice >= 1 && gradeChoice <= grades.length) {
+                    Grade selectedGrade = grades[gradeChoice - 1];
+                    int totalPrice = 0;
+                    for (Cart cartItem : customer.getCart()) {
+                        totalPrice += (cartItem.getProduct().getPrice() * cartItem.getQuantity());
+                    }
+                    int discountedPrice = selectedGrade.discount(totalPrice);   // 할인 금액
+                    int discountedTotalPrice = totalPrice - discountedPrice;    // 최종 금액
+                    System.out.println("\n주문이 완료되었습니다!");
+                    System.out.printf("할인 전 금액: %,d원\n", totalPrice);
+                    System.out.printf("%s 등급 할인(%d%%): -%,d원\n", selectedGrade.name(), selectedGrade.getDiscountPercent(), discountedPrice);
+                    System.out.printf("최종 결제 금액: %,d원\n", discountedTotalPrice);
+                    for (Cart cartItem : customer.getCart()) {
+                        Product product = cartItem.getProduct();
+                        int quantity = cartItem.getQuantity();
+                        System.out.println(product.getProductName() + " 재고가 " +
+                                product.getStock() + " → " + (product.getStock() - quantity) + "개로 업데이트 되었습니다.");
+                        product.setStock(product.getStock() - quantity);
+                    }
+                    customer.setCart(new ArrayList<>());
+                    break;
+                } else {
+                    System.out.println("\n다시 입력해주세요.");
+                }
+            } catch (Exception e) {
+                System.out.println("\n다시 입력해주세요.");
+                sc.nextLine();
+            }
         }
-        System.out.printf("\n주문이 완료되었습니다! 총 금액: %,d원\n", totalPrice);
-        for (Cart cartItem : customer.getCart()) {
-            Product product = cartItem.getProduct();
-            int quantity = cartItem.getQuantity();
-            System.out.println(product.getProductName() + " 재고가 " +
-                    product.getStock() + " → " + (product.getStock() - quantity) + "개로 업데이트 되었습니다.");
-            product.setStock(product.getStock() - quantity);
-        }
-        customer.setCart(new ArrayList<>());
     }
 
     // 상품 추가 메서드
@@ -419,9 +445,9 @@ public class CommerceSystem {
             for (Product product : category.getProducts()) {
                 if (product.getProductName().equals(deleteProductName)) {
                     System.out.println("\n현재 상품 정보: " + product);
-                    System.out.println("\n위 상품을 정말 삭제하시겠습니까?");
-                    System.out.println("1. 확인   2. 취소");
                     while (true) {
+                        System.out.println("\n위 상품을 정말 삭제하시겠습니까?");
+                        System.out.println("1. 확인   2. 취소");
                         System.out.print("입력: ");
                         try {
                             int confirmDeleteProductChoice = sc.nextInt();
@@ -435,10 +461,10 @@ public class CommerceSystem {
                                 System.out.println("\n취소하였습니다.");
                                 return;
                             } else {
-                                System.out.println("\n다시 입력해주세요.\n");
+                                System.out.println("\n다시 입력해주세요.");
                             }
                         } catch (Exception e) {
-                            System.out.println("\n다시 입력해주세요.\n");
+                            System.out.println("\n다시 입력해주세요.");
                             sc.nextLine();
                         }
                     }
@@ -458,9 +484,9 @@ public class CommerceSystem {
             }
             System.out.println();
         }
-        System.out.println("1. 관리자 메뉴로 돌아가기");
-        System.out.println("2. 메인으로 돌아가기");
         while (true) {
+            System.out.println("1. 관리자 메뉴로 돌아가기");
+            System.out.println("2. 메인으로 돌아가기");
             System.out.print("입력: ");
             try {
                 int backChoice = sc.nextInt();
