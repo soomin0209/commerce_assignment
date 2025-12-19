@@ -1,9 +1,6 @@
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class CommerceSystem {
 
@@ -156,7 +153,7 @@ public class CommerceSystem {
         System.out.println("0. 뒤로가기");
         int productChoice = getIntInputInRange(0, products.size());
         if (productChoice == 0) {
-            return; // TODO return 했을 때 filterByPrice로 갈 수 있는지
+            return;
         }
         addProductToCart(products.get(productChoice - 1));
     }
@@ -172,7 +169,7 @@ public class CommerceSystem {
         System.out.println("0. 뒤로가기");
         int productChoice = getIntInputInRange(0, products.size());
         if (productChoice == 0) {
-            return; // TODO return 했을 때 filterByPrice로 갈 수 있는지
+            return;
         }
         addProductToCart(products.get(productChoice - 1));
     }
@@ -198,31 +195,33 @@ public class CommerceSystem {
 
     // 장바구니 확인 메서드
     public void checkCart() {
-        System.out.println("\n[ 장바구니 내역 ]");
-        for (Cart cartItem : customer.getCart()) {
-            System.out.println(cartItem);
-        }
-        System.out.println("\n[ 총 주문 금액 ]");
-        int totalPrice = 0;
-        for (Cart cartItem : customer.getCart()) {
-            totalPrice += (cartItem.getProduct().getPrice() * cartItem.getQuantity());
-        }
-        System.out.printf("%,d원\n", totalPrice);
-        System.out.println("\n위 상품들을 주문하시겠습니까?");
-        System.out.println("1. 주문 확정    2. 메인으로 돌아가기");
-        int confirmOrderChoice = getIntInputInRange(1, 2);
-        if (confirmOrderChoice == 1) {
-            confirmOrder();
+        while (!customer.getCart().isEmpty()) {
+            System.out.println("\n[ 장바구니 내역 ]");
+            for (Cart cartItem : customer.getCart()) {
+                System.out.println(cartItem);
+            }
+            System.out.println("\n[ 총 주문 금액 ]");
+            int totalPrice = 0;
+            for (Cart cartItem : customer.getCart()) {
+                totalPrice += (cartItem.getProduct().getPrice() * cartItem.getQuantity());
+            }
+            System.out.printf("%,d원\n", totalPrice);
+            System.out.println("\n위 상품들을 주문하시겠습니까?");
+            System.out.println("1. 주문 확정");
+            System.out.println("2. 선택 삭제");
+            System.out.println("0. 메인으로 돌아가기");
+            int confirmOrderChoice = getIntInputInRange(0, 2);
+            if (confirmOrderChoice == 1) {
+                confirmOrder();
+            } else if (confirmOrderChoice == 2) {
+                deleteProductInCart();
+            } else {
+                return;
+            }
         }
     }
 
-    // 주문 취소 메서드
-    public void cancelOrder() {
-        customer.setCart(new ArrayList<>());
-        System.out.println("\n주문이 취소되었습니다.");
-    }
-
-    // 주문 확정 메서드
+    // 장바구니 주문 확정 메서드
     public void confirmOrder() {
         System.out.println("\n고객 등급을 입력해주세요.");
         Grade[] grades = Grade.values();
@@ -253,7 +252,34 @@ public class CommerceSystem {
         customer.setCart(new ArrayList<>());
     }
 
-    // 상품 추가 메서드
+    // 장바구니 선택 삭제 메서드
+    public void deleteProductInCart() {
+        System.out.println("\n삭제할 상품명을 입력해주세요.");
+        System.out.print("입력: ");
+        sc.nextLine(); // 버퍼 비우기
+        String deleteProductName = sc.nextLine();
+        // anyMatch로 삭제할 상품이 존재하는지 확인
+        boolean exist = customer.getCart().stream()
+                .anyMatch(cartItem -> cartItem.getProduct().getProductName().equals(deleteProductName));
+        // 존재 한다면, filter로 해당 상품을 제외한 새 장바구니 생성
+        if (exist) {
+            List<Cart> updateCart = customer.getCart().stream()
+                    .filter(cartItem -> !cartItem.getProduct().getProductName().equals(deleteProductName))
+                    .toList();
+            customer.setCart(updateCart);   // 새 장바구니로 업데이트
+            System.out.println("\n" + deleteProductName + "이(가) 장바구니에서 삭제되었습니다.");
+        } else {
+            System.out.println("\n해당 상품이 장바구니에 존재하지 않습니다.");
+        }
+    }
+
+    // 주문 취소 메서드
+    public void cancelOrder() {
+        customer.setCart(new ArrayList<>());
+        System.out.println("\n주문이 취소되었습니다.");
+    }
+
+    // 관리자 모드 상품 추가 메서드
     public void addProduct() {
         System.out.println("\n어느 카테고리에 상품을 추가하시겠습니까?");
         int categoryIndex = 1;
@@ -301,7 +327,7 @@ public class CommerceSystem {
         }
     }
 
-    // 상품 수정 메서드
+    // 관리자 모드 상품 수정 메서드
     public void updateProduct() {
         System.out.print("\n수정할 상품명을 입력해주세요: ");
         sc.nextLine(); // 버퍼 비우기
@@ -310,7 +336,7 @@ public class CommerceSystem {
             for (Product product : category.getProducts()) {
                 if (product.getProductName().equals(updateProductName)) {
                     System.out.println("현재 상품 정보: " + product);
-                    System.out.println("\n수정할 항목을 선택해주세요: ");
+                    System.out.println("\n수정할 항목을 선택해주세요.");
                     System.out.println("1. 가격");
                     System.out.println("2. 설명");
                     System.out.println("3. 재고수량");
@@ -346,8 +372,10 @@ public class CommerceSystem {
         System.out.println("\n해당 상품이 존재하지 않습니다.");
     }
 
+    // 관리자 모드 상품 삭제 메서드
     public void deleteProduct() {
-        System.out.print("\n삭제할 상품명을 입력해주세요: ");
+        System.out.println("\n삭제할 상품명을 입력해주세요.");
+        System.out.print("입력: ");
         sc.nextLine(); // 버퍼 지우기
         String deleteProductName = sc.nextLine();
         for (Category category : categories) {
@@ -371,6 +399,7 @@ public class CommerceSystem {
         System.out.println("\n해당 상품이 존재하지 않습니다.");
     }
 
+    // 관리자 모드 전체 상품 현황 메서드
     public void viewAllProductsStatus() {
         System.out.println("\n[ 전체 상품 현황 ]");
         for (Category category : categories){
@@ -399,7 +428,6 @@ public class CommerceSystem {
             }
         }
     }
-
 
     private int getIntInputInRange(int min, int max) {
         while (true) {
