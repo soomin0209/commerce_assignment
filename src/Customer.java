@@ -1,3 +1,4 @@
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,8 @@ public class Customer {
         this.grade = "BRONZE";
     }
 
+
+
     // Getter
     public String getCustomerName() {
         return customerName;
@@ -29,8 +32,9 @@ public class Customer {
         return grade;
     }
 
+    // 캡슐화를 위해 복사본 반환
     public List<Cart> getCart() {
-        return cart;
+        return new ArrayList<>(cart);
     }
 
     // Setter
@@ -46,8 +50,9 @@ public class Customer {
         this.grade = grade;
     }
 
+    // 캡슐화를 위해 방어적 복사
     public void setCart(List<Cart> cart) {
-        this.cart = cart;
+        this.cart = new ArrayList<>(cart);
     }
 
     public void addToCart(Product product) {

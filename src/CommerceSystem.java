@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -422,7 +423,7 @@ public class CommerceSystem {
             System.out.print("입력: ");
             try {
                 return sc.nextInt();
-            } catch (Exception e) {
+            } catch (InputMismatchException e) {
                 System.out.println("다시 입력해주세요.");
                 sc.nextLine();
             }
@@ -439,7 +440,7 @@ public class CommerceSystem {
                     continue;
                 }
                 return input;
-            } catch (Exception e) {
+            } catch (InputMismatchException e) {
                 System.out.println("\n다시 입력해주세요.");
                 sc.nextLine();
             }

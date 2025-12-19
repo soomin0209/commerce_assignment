@@ -10,7 +10,7 @@ public class Category {
     // 생성자
     public Category(String categoryName, List<Product> products) {
         this.categoryName = categoryName;
-        this.products = products;
+        this.products = new ArrayList<>(products);  // 복사본 저장
     }
 
     // Getter
@@ -18,7 +18,8 @@ public class Category {
         return categoryName;
     }
 
+    // 캡슐화를 위해 복사본 반환
     public List<Product> getProducts() {
-        return products;
+        return new ArrayList<>(products);
     }
 }
