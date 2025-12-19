@@ -19,11 +19,6 @@ public class Cart {
         return quantity;
     }
 
-    // Setter
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
     // 수량 증가 메서드
     public void increaseQuantity() {
         this.quantity++;
