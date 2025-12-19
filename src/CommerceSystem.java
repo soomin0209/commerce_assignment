@@ -321,7 +321,7 @@ public class CommerceSystem {
         int confirmAddProductChoice = getIntInputInRange(1, 2);
         if (confirmAddProductChoice == 1) {
             Product newProduct = new Product(newProductName, newProductPrice, newProductDescription, newProductStock);
-            selectedCategory.getProducts().add(newProduct);
+            selectedCategory.addProduct(newProduct);
             System.out.println("\n상품이 성공적으로 추가되었습니다!");
         } else {
             System.out.println("\n취소하였습니다.");
@@ -388,7 +388,7 @@ public class CommerceSystem {
                     int confirmDeleteProductChoice = getIntInputInRange(1, 2);
                     if (confirmDeleteProductChoice == 1) {
                         System.out.println("\n" + product.getProductName() + "이(가) 성공적으로 삭제되었습니다!");
-                        category.getProducts().remove(product);
+                        category.removeProduct(product);
                         customer.getCart().removeIf(cartItem -> cartItem.getProduct().equals(product)); // 장바구니에서도 삭제
                     } else {
                         System.out.println("\n취소하였습니다.");
