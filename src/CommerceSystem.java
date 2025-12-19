@@ -389,7 +389,7 @@ public class CommerceSystem {
                     if (confirmDeleteProductChoice == 1) {
                         System.out.println("\n" + product.getProductName() + "이(가) 성공적으로 삭제되었습니다!");
                         category.removeProduct(product);
-                        customer.getCart().removeIf(cartItem -> cartItem.getProduct().equals(product)); // 장바구니에서도 삭제
+                        customer.removeFromCart(product); // 장바구니에서도 삭제
                     } else {
                         System.out.println("\n취소하였습니다.");
                     }

@@ -66,4 +66,8 @@ public class Customer {
         // 없으면 새로 추가
         cart.add(new Cart(product, 1));
     }
+
+    public void removeFromCart(Product product) {
+        cart.removeIf(cartItem -> cartItem.getProduct().equals(product));
+    }
 }
