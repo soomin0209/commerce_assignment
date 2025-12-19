@@ -2,6 +2,8 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class CommerceSystem {
 
@@ -67,7 +69,7 @@ public class CommerceSystem {
                 continue;
             }
             Category selectedCategory = categories.get(categoryChoice - 1);
-            productList(selectedCategory);
+            filterByPrice(selectedCategory);
         }
     }
 
@@ -117,19 +119,60 @@ public class CommerceSystem {
         }
     }
 
-    // 카테고리 별 상품 목록 메서드
-    public void productList(Category category) {
+    // 상품 가격 필터 선택 메서드
+    public void filterByPrice(Category category) {
         List<Product> products = category.getProducts();
-        System.out.println("\n[ " + category.getCategoryName() + " 카테고리 ]");
-        int productIndex = 1;
-        for (Product product : products) {
-            System.out.println(productIndex + ". " + product.toStringWithoutStock());
-            productIndex++;
+        while (true) {
+            System.out.println("\n[ " + category.getCategoryName() + " 카테고리 ]");
+            System.out.println("1. 전체 상품 보기");
+            System.out.println("2. 가격대별 필터링 (100만원 이하)");
+            System.out.println("3. 가격대별 필터링 (100만원 초과)");
+            System.out.println("0. 뒤로가기");
+            int priceFilterChoice = getIntInputInRange(0, 3);
+            if (priceFilterChoice == 0) {
+                return;
+            } else if (priceFilterChoice == 1) {
+                productList(category);
+            } else if (priceFilterChoice == 2) {
+                List<Product> filteredProducts = products.stream()
+                        .filter(product -> product.getPrice() <= 1000000)
+                        .toList();
+                System.out.println("\n[ 100만원 이하 상품 목록 ]");
+                filteredProductList(filteredProducts);
+            } else  {
+                List<Product> filteredProducts = products.stream()
+                        .filter(product -> product.getPrice() > 1000000)
+                        .toList();
+                System.out.println("\n[ 100만원 이상 상품 목록 ]");
+                filteredProductList(filteredProducts);
+            }
         }
+    }
+
+    // 필터링 된 상품 출력 메서드
+    public void filteredProductList(List<Product> products) {
+        int[] productIndex = {1};
+        products.forEach(product -> System.out.println(productIndex[0]++ + ". " + product.toStringWithoutStock()));
         System.out.println("0. 뒤로가기");
         int productChoice = getIntInputInRange(0, products.size());
         if (productChoice == 0) {
-            return;
+            return; // TODO return 했을 때 filterByPrice로 갈 수 있는지
+        }
+        addProductToCart(products.get(productChoice - 1));
+    }
+
+
+    // 카테고리별 상품 목록 메서드
+    public void productList(Category category) {
+        List<Product> products = category.getProducts();
+        System.out.println("\n[ " + category.getCategoryName() + " 전체 상품 ]");
+        int[] productIndex = {1};
+        // product 조회 스트림 사용
+        products.stream().forEach(product -> System.out.println(productIndex[0]++ + ". " + product.toStringWithoutStock()));
+        System.out.println("0. 뒤로가기");
+        int productChoice = getIntInputInRange(0, products.size());
+        if (productChoice == 0) {
+            return; // TODO return 했을 때 filterByPrice로 갈 수 있는지
         }
         addProductToCart(products.get(productChoice - 1));
     }
@@ -333,9 +376,8 @@ public class CommerceSystem {
         for (Category category : categories){
             List<Product> products = category.getProducts();
             System.out.println("=== " + category.getCategoryName() + " ===");
-            for (Product product : products) {
-                System.out.println(product);
-            }
+            // product 조회 스트림 사용
+            products.stream().forEach(System.out::println);
             System.out.println();
         }
         System.out.println("1. 관리자 메뉴로 돌아가기");
