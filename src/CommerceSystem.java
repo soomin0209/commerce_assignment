@@ -25,9 +25,6 @@ public class CommerceSystem {
 
     // 플랫폼 메인 메서드
     public void mainMenu() {
-        int checkCartIndex = categories.size() + 1;
-        int cancelOrderIndex = categories.size() + 2;
-        int administratorModeIndex = categories.size() + 3;
         while (true) {
             System.out.println("\n[ 실시간 커머스 플랫폼 메인 ]");
             int categoryIndex = 1;
@@ -35,39 +32,45 @@ public class CommerceSystem {
                 System.out.println(categoryIndex + ". " + category.getCategoryName());
                 categoryIndex++;
             }
-            System.out.println((categoryIndex + 2) + ". 관리자 모드");
+
+            int administratorModeIndex = categoryIndex;
+            System.out.println(categoryIndex + ". 관리자 모드");
+            categoryIndex++;
             System.out.println("0. 종료");
+
+            // 주문 관리 인덱스 -1로 초기화 → 입력 범위에 포함 안됨
+            int checkCartIndex = -1;
+            int cancelOrderIndex = -1;
             if(!customer.getCart().isEmpty()) {
                 System.out.println("\n[ 주문 관리 ]");
-                System.out.println((categoryIndex) + ". 장바구니 확인");
-                System.out.println((categoryIndex + 1) + ". 주문 취소");
+                checkCartIndex = categoryIndex;
+                System.out.println(categoryIndex + ". 장바구니 확인");
+                categoryIndex++;
+
+                cancelOrderIndex = categoryIndex;
+                System.out.println(categoryIndex + ". 주문 취소");
+                categoryIndex++;
             }
-            int categoryChoice = getIntInputInRange(0, administratorModeIndex);
+
+            // 동적으로 max 값 계산
+            int maxCategoryIndex = categoryIndex - 1;
+            int categoryChoice = getIntInputInRange(0, maxCategoryIndex);
             if (categoryChoice == 0) {
                 System.out.println("\n커머스 플랫폼을 종료합니다.");
                 return;
             } else if (categoryChoice == (checkCartIndex)){
-                if (customer.getCart().isEmpty()) {
-                    System.out.println("\n다시 입력해주세요");
-                    continue;
-                } else {
-                    checkCart();
-                    continue;
-                }
+                checkCart();
+                continue;
             } else if (categoryChoice == (cancelOrderIndex)) {
-                if (customer.getCart().isEmpty()) {
-                    System.out.println("\n다시 입력해주세요");
-                    continue;
-                } else {
-                    cancelOrder();
-                    continue;
-                }
+                cancelOrder();
+                continue;
             } else if (categoryChoice == (administratorModeIndex)) {
                 administratorMode();
                 continue;
+            } else {
+                Category selectedCategory = categories.get(categoryChoice - 1);
+                filterByPrice(selectedCategory);
             }
-            Category selectedCategory = categories.get(categoryChoice - 1);
-            filterByPrice(selectedCategory);
         }
     }
 
