@@ -9,7 +9,6 @@ public class CommerceSystem {
     private List<Category> categories = new ArrayList<>();
     private Scanner sc = new Scanner(System.in);
     private Customer customer;
-    private boolean returnToMain = false;
 
     // 생성자
     public CommerceSystem(List<Category> categories, Customer customer) {
@@ -99,9 +98,8 @@ public class CommerceSystem {
                     } else if (adminMenuChoice == 3) {
                         deleteProduct();
                     } else if (adminMenuChoice == 4) {
-                        viewAllProductsStatus();
-                        if (returnToMain) {
-                            returnToMain = false;
+                        NavigationTarget target = viewAllProductsStatus();
+                        if (target == NavigationTarget.BACK_TO_MAIN) {
                             return;
                         }
                     }
@@ -431,7 +429,7 @@ public class CommerceSystem {
     }
 
     // 관리자 모드 전체 상품 현황 메서드
-    public void viewAllProductsStatus() {
+    public NavigationTarget viewAllProductsStatus() {
         System.out.println("\n[ 전체 상품 현황 ]");
         for (Category category : categories){
             List<Product> products = category.getProducts();
@@ -444,7 +442,9 @@ public class CommerceSystem {
         System.out.println("2. 메인으로 돌아가기");
         int backChoice = getIntInputInRange(1, 2);
         if (backChoice == 2) {
-            returnToMain = true;
+            return NavigationTarget.BACK_TO_MAIN;
+        } else {
+            return NavigationTarget.BACK_TO_ADMIN;
         }
     }
 
