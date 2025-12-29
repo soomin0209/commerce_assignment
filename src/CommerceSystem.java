@@ -199,14 +199,15 @@ public class CommerceSystem {
 
     // 장바구니 확인 메서드
     public void checkCart() {
-        while (!customer.getCart().isEmpty()) {
+        List<Cart> cartSnapshot = customer.getCart();
+        while (!cartSnapshot.isEmpty()) {
             System.out.println("\n[ 장바구니 내역 ]");
-            for (Cart cartItem : customer.getCart()) {
+            for (Cart cartItem : cartSnapshot) {
                 System.out.println(cartItem);
             }
             System.out.println("\n[ 총 주문 금액 ]");
             int totalPrice = 0;
-            for (Cart cartItem : customer.getCart()) {
+            for (Cart cartItem : cartSnapshot) {
                 totalPrice += (cartItem.getProduct().getPrice() * cartItem.getQuantity());
             }
             System.out.printf("%,d원\n", totalPrice);
@@ -217,8 +218,10 @@ public class CommerceSystem {
             int confirmOrderChoice = getIntInputInRange(0, 2);
             if (confirmOrderChoice == 1) {
                 confirmOrder();
+                cartSnapshot = customer.getCart();
             } else if (confirmOrderChoice == 2) {
                 deleteProductInCart();
+                cartSnapshot = customer.getCart();
             } else {
                 return;
             }
@@ -227,6 +230,7 @@ public class CommerceSystem {
 
     // 장바구니 주문 확정 메서드
     public void confirmOrder() {
+        List<Cart> cartSnapshot = customer.getCart();
         System.out.println("\n고객 등급을 입력해주세요.");
         Grade[] grades = Grade.values();
         int gradeIndex = 1;
@@ -237,7 +241,7 @@ public class CommerceSystem {
         int gradeChoice = getIntInputInRange(1, grades.length);
         Grade selectedGrade = grades[gradeChoice - 1];
         int totalPrice = 0;
-        for (Cart cartItem : customer.getCart()) {
+        for (Cart cartItem : cartSnapshot) {
             totalPrice += (cartItem.getProduct().getPrice() * cartItem.getQuantity());
         }
         int discountedPrice = selectedGrade.discount(totalPrice);   // 할인 금액
@@ -246,7 +250,7 @@ public class CommerceSystem {
         System.out.printf("할인 전 금액: %,d원\n", totalPrice);
         System.out.printf("%s 등급 할인(%d%%): -%,d원\n", selectedGrade.name(), selectedGrade.getDiscountPercent(), discountedPrice);
         System.out.printf("최종 결제 금액: %,d원\n", discountedTotalPrice);
-        for (Cart cartItem : customer.getCart()) {
+        for (Cart cartItem : cartSnapshot) {
             Product product = cartItem.getProduct();
             int quantity = cartItem.getQuantity();
             System.out.println(product.getProductName() + " 재고가 " +
@@ -258,16 +262,17 @@ public class CommerceSystem {
 
     // 장바구니 선택 삭제 메서드
     public void deleteProductInCart() {
+        List<Cart> cartSnapshot = customer.getCart();
         System.out.println("\n삭제할 상품명을 입력해주세요.");
         System.out.print("입력: ");
         sc.nextLine(); // 버퍼 비우기
         String deleteProductName = sc.nextLine();
         // anyMatch로 삭제할 상품이 존재하는지 확인
-        boolean exist = customer.getCart().stream()
+        boolean exist = cartSnapshot.stream()
                 .anyMatch(cartItem -> cartItem.getProduct().getProductName().equals(deleteProductName));
         // 존재 한다면, filter로 해당 상품을 제외한 새 장바구니 생성
         if (exist) {
-            List<Cart> updateCart = customer.getCart().stream()
+            List<Cart> updateCart = cartSnapshot.stream()
                     .filter(cartItem -> !cartItem.getProduct().getProductName().equals(deleteProductName))
                     .toList();
             customer.setCart(updateCart);   // 새 장바구니로 업데이트
