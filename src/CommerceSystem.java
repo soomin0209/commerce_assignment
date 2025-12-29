@@ -231,6 +231,28 @@ public class CommerceSystem {
     // 장바구니 주문 확정 메서드
     public void confirmOrder() {
         List<Cart> cartSnapshot = customer.getCart();
+
+        // 재고가 부족한 상품 리스트
+        List<String> understockedProduct = new ArrayList<>();
+        for (Cart cartItem : cartSnapshot) {
+            Product product = cartItem.getProduct();
+            int quantity = cartItem.getQuantity();
+            if (product.getStock() < quantity) {
+                String message = "\n" + product.getProductName() + "의 재고가 부족합니다.\n" +
+                        "현재 재고: " + product.getStock() + "개\n" +
+                        "주문 수량: " + quantity + "개";
+                understockedProduct.add(message);
+            }
+        }
+
+        // 재고가 부족한 상품 모두 출력
+        if(!understockedProduct.isEmpty()) {
+            for (String message : understockedProduct) {
+                System.out.println(message);
+            }
+            return;
+        }
+
         System.out.println("\n고객 등급을 입력해주세요.");
         Grade[] grades = Grade.values();
         int gradeIndex = 1;
